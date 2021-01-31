@@ -1,4 +1,4 @@
 ## TODO for boiler plate
-- [] environment handling
+- [x] environment handling
 - [] linting
 - [] pregithook checks
