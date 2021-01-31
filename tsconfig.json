@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "module": "esnext",
+    "module": "CommonJS",
     "target": "es5",
     "lib": ["es6", "dom", "DOM.Iterable"],
     "sourceMap": true,
@@ -15,9 +15,5 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "importsNotUsedAsValues": "preserve"
-  },
-  "include": [
-    "./src",
-    "./webpack.config.js"
-  ]
+  }
 }
