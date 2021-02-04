@@ -27,6 +27,7 @@ module.exports = (env: any, args: any) => {
     },
     devServer: {
       contentBase: path.resolve(__dirname, "./dist"),
+      hot: true,
       port: 9000
     },
     plugins: [
