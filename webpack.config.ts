@@ -1,25 +1,36 @@
 import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import CompressionPlugin  from 'compression-webpack-plugin'
-import BrotliPlugin from 'brotli-webpack-plugin'
+// import CompressionPlugin  from 'compression-webpack-plugin'
+// import BrotliPlugin from 'brotli-webpack-plugin'
 import Dotenv from 'dotenv-webpack'
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import {HotModuleReplacementPlugin} from "webpack"
 
 module.exports = (env: any, args: any) => {
   const isProduction = args.mode === "production";
+
   return {
+    mode: isProduction ? "production" : "development",
     entry: "./src/index.tsx",
     devtool: isProduction ? "inline-source-map" : "source-map",
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
-          use: "ts-loader",
+          test: /\.(js|jsx|tsx|ts)$/,
           exclude: /node_modules/,
+          use: {
+            loader: require.resolve("babel-loader"),
+            options: {
+              plugins: [
+                !isProduction && require.resolve("react-refresh/babel"),
+              ].filter(Boolean),
+            },
+          },
         },
       ],
     },
     resolve: {
-      extensions: [".tsx", ".ts", ".js"],
+      extensions: ["*", ".js", ".jsx", ".tsx", ".ts"],
     },
     output: {
       filename: "[name].bundle.js",
@@ -28,20 +39,15 @@ module.exports = (env: any, args: any) => {
     devServer: {
       contentBase: path.resolve(__dirname, "./dist"),
       hot: true,
-      port: 9000
+      port: 9000,
     },
     plugins: [
       new Dotenv(),
       new HtmlWebpackPlugin({
         template: "./public/index.html",
       }),
-      new CompressionPlugin(),
-      new BrotliPlugin({
-        asset: "[path].br[query]",
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.7,
-      }),
-    ],
+      !isProduction && new HotModuleReplacementPlugin(),
+      !isProduction && new ReactRefreshWebpackPlugin(),
+    ].filter(Boolean),
   };
 };
