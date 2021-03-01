@@ -1,14 +1,13 @@
 import React from "react";
 
-const App: React.FC = () => {
-    const x = "ahahhaha"
-    return (
-        <div>
-            iwadasdasdasd:w
-            <p> hello wrodl</p>
-        </div>
-    )
+function hello(wow: string) {
+  return wow;
 }
-    
+
+const App: React.FC = () => {
+  console.log("asdasd");
+
+  return <div>hello how are you</div>;
+};
 
 export default App;

@@ -1,18 +1,29 @@
-import path from 'path'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-// import CompressionPlugin  from 'compression-webpack-plugin'
-// import BrotliPlugin from 'brotli-webpack-plugin'
-import Dotenv from 'dotenv-webpack'
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
-import {HotModuleReplacementPlugin} from "webpack"
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import CompressionPlugin from "compression-webpack-plugin";
+import BrotliPlugin from "brotli-webpack-plugin";
+import Dotenv from "dotenv-webpack";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import { HotModuleReplacementPlugin } from "webpack";
 
-module.exports = (env: any, args: any) => {
+type Env = {
+  production: boolean;
+};
+
+type Args = {
+  mode: string;
+  env: Env;
+};
+
+module.exports = (env: Env, args: Args) => {
+  console.log("env", env);
+  console.log("args", args);
   const isProduction = args.mode === "production";
 
   return {
     mode: isProduction ? "production" : "development",
     entry: "./src/index.tsx",
-    devtool: isProduction ? "inline-source-map" : "source-map",
+    devtool: isProduction ? false : "eval-source-map",
     module: {
       rules: [
         {
@@ -21,9 +32,7 @@ module.exports = (env: any, args: any) => {
           use: {
             loader: require.resolve("babel-loader"),
             options: {
-              plugins: [
-                !isProduction && require.resolve("react-refresh/babel"),
-              ].filter(Boolean),
+              plugins: [!isProduction && require.resolve("react-refresh/babel")].filter(Boolean),
             },
           },
         },
@@ -48,6 +57,15 @@ module.exports = (env: any, args: any) => {
       }),
       !isProduction && new HotModuleReplacementPlugin(),
       !isProduction && new ReactRefreshWebpackPlugin(),
+      isProduction && new CompressionPlugin(),
+      isProduction && new ReactRefreshWebpackPlugin(),
+      new CompressionPlugin(),
+      new BrotliPlugin({
+        asset: "[path].br[query]",
+        test: /\.js$|\.css$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.7,
+      }),
     ].filter(Boolean),
   };
 };
