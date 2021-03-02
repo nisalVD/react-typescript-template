@@ -14,6 +14,11 @@
     "validate": "npm run lint && npm run check-format && npm run check-types && npm run build",
     "prepare": "husky install"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run validate"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
