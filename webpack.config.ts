@@ -16,8 +16,6 @@ type Args = {
 };
 
 module.exports = (env: Env, args: Args) => {
-  console.log("env", env);
-  console.log("args", args);
   const isProduction = args.mode === "production";
 
   return {
